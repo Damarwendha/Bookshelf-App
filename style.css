@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap");
+body {
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
+  background-color: #333333;
+  color: #e6e6e6;
+  padding-bottom: 1000px;
+}
+header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+h1 {
+  font-weight: 900;
+}
+.top-container,
+.mid-container,
+.bot-container {
+  display: flex;
+  margin-top: 30px;
+  flex-direction: column;
+  align-items: center;
+  background-color: #242424;
+  border: 3px solid #363636;
+  transition: all 0.3s;
+  border-radius: 10px;
+  padding: 20px;
+  padding-top: 0px;
+}
+.top-container:hover,
+.mid-container:hover,
+.bot-container:hover {
+  box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.1), 0 4px 20px 0 rgba(255, 255, 255, 0.1);
+}
+input {
+  background-color: #e7e7e7;
+  width: 40vh;
+  border-radius: 4px;
+  border: 2px solid rgb(255, 255, 255);
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 6px;
+}
+button {
+  margin-left: 1px;
+  margin-top: 10px;
+  padding: 5px 20px;
+  background-color: rgb(37, 37, 158);
+  color: white;
+  font-size: 11px;
+  border-color: rgb(0, 0, 0, 0);
+  border-width: 3px;
+  border-style: solid;
+  transition: all 0.15s;
+}
+button:hover {
+  background-color: rgb(32, 32, 212);
+  border-color: rgb(21, 59, 226);
+  border-width: 3px;
+  border-style: solid;
+}
+button:active{
+  background-color: rgb(45, 45, 218);
+}
+.input-checkbox{
+  width: auto;
+}
+.input-writer,
+.input-year{
+  width: 18vh;
+}
+.input-writer-year-container{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 44vh;
+  display: flex;
+  justify-content: space-around;
+}
+.checkbox-container{
+  display: flex;
+  flex-direction: row;
+}
+.not-readed-title-container{
+  margin: 0;
+  align-self: center;
+}
+.check-image{
+  background-color: rgb(16, 190, 0);
+  padding: 10px;
+  border-radius: 20px;
+  width: 15px;
+  cursor: pointer;
+}
+.trash-image{
+  background-color: rgb(255, 0, 0);
+  padding: 10px;
+  border-radius: 20px;
+  width: 15px;
+  cursor: pointer;
+}
+h4{
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  margin: 0;
+  font-weight: 400;
+}
+h6{
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+.not-readed-output-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0px;
+  border: 1px solid rgb(121, 121, 121);
+  padding: 10px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  max-width: 250px;
+}
+.not-readed-icons{
+  margin-top: 10px;
+}
+.not-readed-output-left{
+  max-width: 250px;
+  align-self: flex-start;
+}
+.writer-text{
+  align-self: self-end;
+  font-weight: 100;
+  margin: 0;
+  margin-top: 5px;
+}
+.undo-image{
+  background-color: rgb(189, 170, 0);
+  padding: 10px;
+  border-radius: 20px;
+  width: 15px;
+  cursor: pointer;
+}
