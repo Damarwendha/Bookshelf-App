@@ -113,7 +113,8 @@ h6{
   overflow-wrap: break-word;
   white-space: normal;
 }
-.not-readed-output-container{
+.readed-output-container,
+.unread-output-container{
   display: flex;
   flex-direction: column;
   align-items: center;

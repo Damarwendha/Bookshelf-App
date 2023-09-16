@@ -14,7 +14,7 @@ const rootReaded = document.querySelector(".root-readed");
 const nothingTextUnread = document.querySelector(".nothing-unread");
 const nothingTextReaded = document.querySelector(".nothing-readed");
 
-let { bookReaded, bookUnread } = myBooks;
+const { bookReaded, bookUnread } = myBooks;
 
 renderReadedHTML();
 renderUnreadHTML();
@@ -45,41 +45,39 @@ function addBook(title, writer, year) {
   nothingTextReaded.remove();
   if (checkboxElem.checked) {
     bookReaded.push({
-      ids: "readed",
+      id: +new Date(),
       title: title,
       writer: writer,
       year: year,
+      isComplete: true
     });
-    rootReaded.innerHTML += outputReadedHTML(title, year, writer);
+    renderReadedHTML();
   } else {
     nothingTextUnread.remove();
     bookUnread.push({
-      ids: "unread",
+      id: +new Date(),
       title: title,
       writer: writer,
       year: year,
+      isComplete: false
     });
-    rootUnread.innerHTML += outputUnreadHTML(title, year, writer);
+    renderUnreadHTML();
   }
 }
 
 function renderReadedHTML() {
   rootReaded.innerHTML = "";
-  bookReaded.forEach((obj, i) => {
-    const { title, year, writer } = obj;
-    rootReaded.innerHTML += outputReadedHTML(title, year, writer, i);
+  bookReaded.forEach(obj => {
+    rootReaded.innerHTML += outputReadedHTML(obj.title, obj.year, obj.writer, obj.id);
   });
-  if (bookReaded == 0) {
-    rootReaded.innerHTML =
-      '<p class="nothing-unread">You have nothing in this shelf</p>';
-  }
+  ifBookEmpty();
   localStorage.setItem("myBooks", JSON.stringify(myBooks));
+  deleteBook();
 }
 function renderUnreadHTML() {
   rootUnread.innerHTML = "";
-  bookUnread.forEach((obj, i) => {
-    const { title, year, writer } = obj;
-    rootUnread.innerHTML += outputUnreadHTML(title, year, writer, i);
+  bookUnread.forEach(obj => {
+    rootUnread.innerHTML += outputUnreadHTML(obj.title, obj.year, obj.writer, obj.id);
   });
   if (bookUnread == 0) {
     rootUnread.innerHTML =
@@ -88,41 +86,57 @@ function renderUnreadHTML() {
   localStorage.setItem("myBooks", JSON.stringify(myBooks));
 }
 
-function deleteReadedBook(i) {
-  bookReaded.splice(i, 1);
-  renderReadedHTML(i);
+function deleteBook(){
+  const deleteButtons = document.querySelectorAll('.trash-image');
+  for(const each of deleteButtons){
+    each.addEventListener('click', () => {
+      const id = each.getAttribute('data-id');
+      const index = bookReaded.findIndex(obj => obj.id == id);
+      bookReaded.splice(index, 1)
+      console.log(bookReaded);
+      console.log(myBooks.bookReaded)
+      document.querySelector(`.readed-output-container-${id}`).remove();
+      ifBookEmpty();
+      localStorage.setItem("myBooks", JSON.stringify(myBooks));
+    })
+  }
 }
 
-function deleteUnreadBook(i) {
-  bookUnread.splice(i, 1);
-  renderUnreadHTML(i);
-}
+// function deleteReadedBook(i) {
+//   bookReaded.splice(i, 1);
+//   renderReadedHTML(i);
+// }
 
-function outputReadedHTML(a, b, c, i) {
+// function deleteUnreadBook(i) {
+//   bookUnread.splice(i, 1);
+//   renderUnreadHTML(i);
+// }
+
+function outputReadedHTML(a, b, c, id) {
   return `
-  <div class="not-readed-output-container">
+  <div class="readed-output-container readed-output-container-${id}">
         <div class="not-readed-output-left">
           <h4>${a}<h4>(${b})</h4></h4>
           <h6 class="writer-text">${c}</h6>
         </div>
         <div class="not-readed-icons">
-          <img src="image/icons8-undo-30.png" alt="undo" class="undo-image" onclick="moveToUnread(${i})">
-          <img src="image/icons8-delete-64.png" alt="delete" class="trash-image" onclick="deleteReadedBook(${i})">
+          <img src="image/icons8-undo-30.png" alt="undo" class="undo-image">
+          <img src="image/icons8-delete-64.png" alt="delete" class="trash-image" data-id="${id}">
         </div>
       </div>
   `;
 }
 
-function outputUnreadHTML(a, b, c, i) {
+function outputUnreadHTML(a, b, c, id) {
   return `
-  <div class="not-readed-output-container">
+  <div class="unread-output-container unread-output-container-${id}">
         <div class="not-readed-output-left">
           <h4>${a}<h4>(${b})</h4></h4>
           <h6 class="writer-text">${c}</h6>
         </div>
         <div class="not-readed-icons">
-          <img src="image/icons8-checked-50.png" alt="checked" class="check-image" onclick="moveToReaded(${i})">
-          <img src="image/icons8-delete-64.png" alt="delete" class="trash-image" onclick="deleteUnreadBook(${i})">
+          <img src="image/icons8-checked-50.png" alt="checked" class="check-image">
+          <img src="image/icons8-delete-64.png" alt="delete" class="trash-image" data-id="${id}">
         </div>
       </div>
   `;
@@ -137,4 +151,11 @@ function moveToUnread(i) {
   bookUnread.push(bookReaded[i]);
   renderUnreadHTML(i);
   deleteReadedBook(i);
+}
+
+function ifBookEmpty() {
+   if (bookReaded == 0) {
+    return rootReaded.innerHTML =
+      '<p class="nothing-unread">You have nothing in this shelf</p>';
+  }
 }

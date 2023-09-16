@@ -13,10 +13,10 @@
   <main>
     <form class="top-container">
       <h3>ADD NEW BOOK!</h3>
-      <input type="text" class="input-title" placeholder="Title" required>
+      <input type="text" class="input-title" placeholder="Title">
       <div class="input-writer-year-container">
-        <input type="text" class="input-writer" placeholder="Writer" required>
-        <input type="date" class="input-year" placeholder="Year" required>
+        <input type="text" class="input-writer" placeholder="Author">
+        <input type="number" class="input-year" placeholder="Year" onkeypress="if (this.value.length > 3) return false;">
       </div>
       <div class="checkbox-container">
         <input type="checkbox" class="input-checkbox">
