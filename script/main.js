@@ -16,8 +16,7 @@ const nothingTextReaded = document.querySelector(".nothing-readed");
 
 const { bookReaded, bookUnread } = myBooks;
 
-renderReadedHTML();
-renderUnreadHTML();
+renderHTML();
 
 formELem.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -25,9 +24,7 @@ formELem.addEventListener("submit", (e) => {
   const writer = inputWriterElem.value;
   const year = inputYearElem.value;
   addBook(title, writer, year);
-  renderReadedHTML();
-  renderUnreadHTML();
-  deleteBook();
+  renderHTML();
   resetInput();
   localStorage.setItem("myBooks", JSON.stringify(myBooks));
 });
@@ -49,7 +46,7 @@ function addBook(title, writer, year) {
       year: year,
       isComplete: true,
     });
-    renderReadedHTML();
+    renderHTML();
   } else {
     nothingTextUnread.remove();
     bookUnread.push({
@@ -59,12 +56,11 @@ function addBook(title, writer, year) {
       year: year,
       isComplete: false,
     });
-    renderUnreadHTML();
+    renderHTML();
   }
 }
 
-renderReadedHTML();
-function renderReadedHTML() {
+function renderHTML() {
   rootReaded.innerHTML = "";
   bookReaded.forEach((obj) => {
     rootReaded.innerHTML += outputReadedHTML(
@@ -75,11 +71,7 @@ function renderReadedHTML() {
       obj.isComplete
     );
   });
-  localStorage.setItem("myBooks", JSON.stringify(myBooks));
-}
 
-renderUnreadHTML();
-function renderUnreadHTML() {
   rootUnread.innerHTML = "";
   bookUnread.forEach((obj) => {
     rootUnread.innerHTML += outputUnreadHTML(
@@ -95,10 +87,12 @@ function renderUnreadHTML() {
       '<p class="nothing-unread">You have nothing in this shelf</p>';
   }
   localStorage.setItem("myBooks", JSON.stringify(myBooks));
+  deleteBook();
+  ifBookEmpty();
+  changeShelf()
 }
 
-deleteBook();
-function deleteBook(){
+function deleteBook() {
   const deleteButtons = document.querySelectorAll(".trash-image");
   for (const each of deleteButtons) {
     each.addEventListener("click", () => {
@@ -112,15 +106,43 @@ function deleteBook(){
         console.log(myBooks.bookReaded);
         document.querySelector(`.readed-output-container-${id}`).remove();
         localStorage.setItem("myBooks", JSON.stringify(myBooks));
+        ifBookEmpty();
       } else {
         bookUnread.splice(unreadIndex, 1);
         console.log(bookUnread);
         console.log(myBooks.bookUnread);
         document.querySelector(`.unread-output-container-${id}`).remove();
         localStorage.setItem("myBooks", JSON.stringify(myBooks));
+        ifBookEmpty();
       }
     });
   }
+}
+
+function moveToReaded() {
+  document.querySelectorAll(".check-image").forEach((each, i) => {
+    each.addEventListener("click", () => {
+      const id = each.getAttribute("data-id");
+      bookUnread[i].isComplete = "true";
+      bookReaded.push(bookUnread[i]);
+      bookUnread.splice(i, 1);
+      document.querySelector(`.unread-output-container-${id}`).remove();
+      renderHTML();
+    });
+  });
+}
+
+function moveToUnread(){
+  document.querySelectorAll(".undo-image").forEach((each, i) => {
+    each.addEventListener("click", () => {
+      const id = each.getAttribute("data-id");
+      bookReaded[i].isComplete = "false";
+      bookUnread.push(bookReaded[i]);
+      bookReaded.splice(i, 1);
+      document.querySelector(`.readed-output-container-${id}`).remove();
+      renderHTML();
+    });
+  });
 }
 
 function outputReadedHTML(a, b, c, id, isComplete) {
@@ -131,7 +153,7 @@ function outputReadedHTML(a, b, c, id, isComplete) {
           <h6 class="writer-text">${c}</h6>
         </div>
         <div class="not-readed-icons">
-          <img src="image/icons8-undo-30.png" alt="undo" class="undo-image">
+          <img src="image/icons8-undo-30.png" alt="undo" class="undo-image" data-id="${id}">
           <img src="image/icons8-delete-64.png" alt="delete" class="trash-image" data-id="${id}" data-is-complete="${isComplete}">
         </div>
       </div>
@@ -146,27 +168,33 @@ function outputUnreadHTML(a, b, c, id, isComplete) {
           <h6 class="writer-text">${c}</h6>
         </div>
         <div class="not-readed-icons">
-          <img src="image/icons8-checked-50.png" alt="checked" class="check-image">
+          <img src="image/icons8-checked-50.png" alt="checked" class="check-image" data-id="${id}">
           <img src="image/icons8-delete-64.png" alt="delete" class="trash-image" data-id="${id}" data-is-complete="${isComplete}">
         </div>
       </div>
   `;
 }
+function changeShelf(){
+  moveToUnread();
+  moveToReaded();
+}
 
-function moveToReaded(i) {
-  bookReaded.push(bookUnread[i]);
-  renderReadedHTML(i);
-  deleteUnreadBook(i);
-}
-function moveToUnread(i) {
-  bookUnread.push(bookReaded[i]);
-  renderUnreadHTML(i);
-  deleteReadedBook(i);
-}
 
 function ifBookEmpty() {
-  if (bookReaded == 0) {
+  ifReadedBookEmpty();
+  ifUnreadBookEmpty();
+}
+
+function ifReadedBookEmpty() {
+  if (myBooks.bookReaded.length == 0) {
     return (rootReaded.innerHTML =
+      '<p class="nothing-unread">You have nothing in this shelf</p>');
+  }
+}
+
+function ifUnreadBookEmpty() {
+  if (myBooks.bookUnread.length == 0) {
+    return (rootUnread.innerHTML =
       '<p class="nothing-unread">You have nothing in this shelf</p>');
   }
 }
