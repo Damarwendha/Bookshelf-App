@@ -3,26 +3,15 @@ const myBooks = JSON.parse(localStorage.getItem("myBooks")) || {
   bookUnread: [],
 };
 
-const formELem = document.querySelector(".top-container");
-const saveElem = document.querySelector(".save-button");
-const inputTitleElem = document.querySelector(".input-title");
-const inputWriterElem = document.querySelector(".input-writer");
-const inputYearElem = document.querySelector(".input-year");
-const checkboxElem = document.querySelector(".input-checkbox");
-const rootUnread = document.querySelector(".root-not-readed");
-const rootReaded = document.querySelector(".root-readed");
-const nothingTextUnread = document.querySelector(".nothing-unread");
-const nothingTextReaded = document.querySelector(".nothing-readed");
-
 const { bookReaded, bookUnread } = myBooks;
 
 renderHTML();
 
-formELem.addEventListener("submit", (e) => {
+$(".top-container").on("submit", (e) => {
   e.preventDefault();
-  const title = inputTitleElem.value;
-  const writer = inputWriterElem.value;
-  const year = inputYearElem.value;
+  const title = $(".input-title").val();
+  const writer = $(".input-writer").val();
+  const year = Number($(".input-year").val());
   addBook(title, writer, year);
   renderHTML();
   resetInput();
@@ -30,15 +19,15 @@ formELem.addEventListener("submit", (e) => {
 });
 
 function resetInput() {
-  inputTitleElem.value = "";
-  inputWriterElem.value = "";
-  inputYearElem.value = "";
-  checkboxElem.checked = false;
+  $(".input-title").val("");
+  $(".input-writer").val("");
+  $(".input-year").val("");
+  $(".input-checkbox").prop("checked", false);
 }
 
 function addBook(title, writer, year) {
-  nothingTextReaded.remove();
-  if (checkboxElem.checked) {
+  if ($(".input-checkbox").prop("checked")) {
+    $(".nothing-readed").remove();
     bookReaded.push({
       id: +new Date(),
       title: title,
@@ -48,7 +37,7 @@ function addBook(title, writer, year) {
     });
     renderHTML();
   } else {
-    nothingTextUnread.remove();
+    $(".nothing-unread").remove();
     bookUnread.push({
       id: +new Date(),
       title: title,
@@ -61,57 +50,40 @@ function addBook(title, writer, year) {
 }
 
 function renderHTML() {
-  rootReaded.innerHTML = "";
-  bookReaded.forEach((obj) => {
-    rootReaded.innerHTML += outputReadedHTML(
-      obj.title,
-      obj.year,
-      obj.writer,
-      obj.id,
-      obj.isComplete
+  $(".root-readed").html("");
+  $.each(bookReaded, (i, obj) => {
+    $(".root-readed").append(
+      outputReadedHTML(obj.title, obj.year, obj.writer, obj.id, obj.isComplete)
     );
   });
 
-  rootUnread.innerHTML = "";
-  bookUnread.forEach((obj) => {
-    rootUnread.innerHTML += outputUnreadHTML(
-      obj.title,
-      obj.year,
-      obj.writer,
-      obj.id,
-      obj.isComplete
+  $(".root-unread").html("");
+  $.each(bookUnread, (i, obj) => {
+    $(".root-unread").append(
+      outputUnreadHTML(obj.title, obj.year, obj.writer, obj.id, obj.isComplete)
     );
   });
-  if (bookUnread == 0) {
-    rootUnread.innerHTML =
-      '<p class="nothing-unread">You have nothing in this shelf</p>';
-  }
   localStorage.setItem("myBooks", JSON.stringify(myBooks));
   deleteBook();
   ifBookEmpty();
-  changeShelf()
+  changeShelf();
 }
 
 function deleteBook() {
-  const deleteButtons = document.querySelectorAll(".trash-image");
-  for (const each of deleteButtons) {
-    each.addEventListener("click", () => {
-      const id = each.getAttribute("data-id");
-      const isComplete = each.getAttribute("data-is-complete");
+  for (const each of $(".trash-image")) {
+    $(each).on("click", () => {
+      const id = $(each).attr("data-id");
+      const isComplete = $(each).attr("data-is-complete");
       const unreadIndex = bookUnread.findIndex((obj) => obj.id == id);
       const readedIndex = bookReaded.findIndex((obj) => obj.id == id);
       if (isComplete === "true") {
         bookReaded.splice(readedIndex, 1);
-        console.log(bookReaded);
-        console.log(myBooks.bookReaded);
-        document.querySelector(`.readed-output-container-${id}`).remove();
+        $(`.readed-output-container-${id}`).remove();
         localStorage.setItem("myBooks", JSON.stringify(myBooks));
         ifBookEmpty();
       } else {
         bookUnread.splice(unreadIndex, 1);
-        console.log(bookUnread);
-        console.log(myBooks.bookUnread);
-        document.querySelector(`.unread-output-container-${id}`).remove();
+        $(`.unread-output-container-${id}`).remove();
         localStorage.setItem("myBooks", JSON.stringify(myBooks));
         ifBookEmpty();
       }
@@ -120,26 +92,26 @@ function deleteBook() {
 }
 
 function moveToReaded() {
-  document.querySelectorAll(".check-image").forEach((each, i) => {
-    each.addEventListener("click", () => {
-      const id = each.getAttribute("data-id");
+  $.each($(".check-image"), (i, each) => {
+    $(each).on("click", () => {
+      const id = $(each).attr("data-id");
       bookUnread[i].isComplete = "true";
       bookReaded.push(bookUnread[i]);
       bookUnread.splice(i, 1);
-      document.querySelector(`.unread-output-container-${id}`).remove();
+      $(`.unread-output-container-${id}`).remove();
       renderHTML();
     });
   });
 }
 
-function moveToUnread(){
-  document.querySelectorAll(".undo-image").forEach((each, i) => {
-    each.addEventListener("click", () => {
-      const id = each.getAttribute("data-id");
+function moveToUnread() {
+  $.each($(".undo-image"), (i, each) => {
+    $(each).on("click", () => {
+      const id = $(each).attr("data-id");
       bookReaded[i].isComplete = "false";
       bookUnread.push(bookReaded[i]);
       bookReaded.splice(i, 1);
-      document.querySelector(`.readed-output-container-${id}`).remove();
+      $(`.readed-output-container-${id}`).remove();
       renderHTML();
     });
   });
@@ -174,11 +146,10 @@ function outputUnreadHTML(a, b, c, id, isComplete) {
       </div>
   `;
 }
-function changeShelf(){
+function changeShelf() {
   moveToUnread();
   moveToReaded();
 }
-
 
 function ifBookEmpty() {
   ifReadedBookEmpty();
@@ -186,15 +157,17 @@ function ifBookEmpty() {
 }
 
 function ifReadedBookEmpty() {
-  if (myBooks.bookReaded.length == 0) {
-    return (rootReaded.innerHTML =
-      '<p class="nothing-unread">You have nothing in this shelf</p>');
+  if (bookReaded.length == 0) {
+    return $(".root-readed").html(
+      '<p class="nothing-unread">You have nothing in this shelf</p>'
+    );
   }
 }
 
 function ifUnreadBookEmpty() {
-  if (myBooks.bookUnread.length == 0) {
-    return (rootUnread.innerHTML =
-      '<p class="nothing-unread">You have nothing in this shelf</p>');
+  if (bookUnread.length == 0) {
+    return $(".root-unread").html(
+      '<p class="nothing-unread">You have nothing in this shelf</p>'
+    );
   }
 }

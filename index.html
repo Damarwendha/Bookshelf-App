@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Bookshelf</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
   <header>
@@ -16,7 +17,7 @@
       <input type="text" class="input-title" placeholder="Title">
       <div class="input-writer-year-container">
         <input type="text" class="input-writer" placeholder="Author">
-        <input type="number" class="input-year" placeholder="Year" onkeypress="if (this.value.length > 3) return false;">
+        <input type="number" class="input-year" placeholder="Year" onkeydown="if (this.value.length > 3) return false;">
       </div>
       <div class="checkbox-container">
         <input type="checkbox" class="input-checkbox">
@@ -29,7 +30,7 @@
 
     <div class="mid-container">
       <h3>UNREAD BOOK</h3>
-      <div class="root-not-readed">
+      <div class="root-unread">
         <p class="nothing-unread">You have nothing in this shelf</p>
       </div>
     </div>
