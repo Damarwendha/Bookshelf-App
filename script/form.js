@@ -1,6 +1,6 @@
 import { Render } from "./app.js";
-import { bookReaded, bookUnread } from "./mybooks.js";
-import { setLocalStorage } from "./mybooks.js";
+import { bookReaded, bookUnread } from "./localStorage.js";
+import { setLocalStorage } from "./localStorage.js";
 
 const renderReaded = new Render(bookReaded, "readed", "undo", false);
 const renderUnread = new Render(bookUnread, "unread", "check", true);
