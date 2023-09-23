@@ -1,5 +1,5 @@
-import { bookReaded, bookUnread } from "./mybooks.js";
-import { renderBoth } from './main.js';
+import { bookReaded, bookUnread } from "./localStorage.js";
+import { renderBoth } from './form.js';
 
 class Book {
   constructor(book, bookStr, imgName, isComplete) {
