@@ -1,7 +1,18 @@
-import renderHTML from './render.js';
-import {bookReaded, bookUnread} from './mybooks.js';
+import { Render } from "./render.js";
+import { bookReaded, bookUnread } from "./mybooks.js";
+import { setLocalStorage } from "./mybooks.js";
 
-renderHTML();
+const renderReaded = new Render(bookReaded, "readed", "undo", false);
+const renderUnread = new Render(bookUnread, "unread", "check", true);
+
+export const renderBoth = () => {
+  renderReaded.bookContainer();
+  renderReaded.alertBookEmpty();
+  renderUnread.bookContainer();
+  renderUnread.alertBookEmpty();
+  setLocalStorage();
+};
+renderBoth();
 
 $(".top-container").on("submit", (e) => {
   e.preventDefault();
@@ -10,7 +21,7 @@ $(".top-container").on("submit", (e) => {
   const year = Number($(".input-year").val());
   addBook(title, writer, year);
   resetInput();
-  renderHTML();
+  renderBoth();
 });
 
 function resetInput() {
@@ -30,7 +41,7 @@ function addBook(title, writer, year) {
       year: year,
       isComplete: true,
     });
-    renderHTML();
+    renderBoth();
   } else {
     $(".nothing-unread").remove();
     bookUnread.push({
@@ -40,7 +51,6 @@ function addBook(title, writer, year) {
       year: year,
       isComplete: false,
     });
-    renderHTML();
+    renderBoth();
   }
 }
-

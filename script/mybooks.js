@@ -5,8 +5,6 @@ export const myBooks = JSON.parse(localStorage.getItem("myBooks")) || {
 
 export const { bookReaded, bookUnread } = myBooks;
 
-const setLocalStorage = () => {
+export const setLocalStorage = () => {
   return localStorage.setItem("myBooks", JSON.stringify(myBooks))
 }
-
-export default setLocalStorage
