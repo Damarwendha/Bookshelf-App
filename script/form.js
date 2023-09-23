@@ -1,4 +1,4 @@
-import { Render } from "./render.js";
+import { Render } from "./app.js";
 import { bookReaded, bookUnread } from "./mybooks.js";
 import { setLocalStorage } from "./mybooks.js";
 
